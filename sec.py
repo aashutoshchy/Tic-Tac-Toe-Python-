@@ -6,8 +6,18 @@ board = [
     "-", "-", "-"
 ]
 
+winPatterns = [
+  [0, 1, 2],
+  [0, 3, 6],
+  [0, 4, 8],
+  [1, 4, 7],
+  [2, 5, 8],
+  [2, 4, 6],
+  [3, 4, 5],
+  [6, 7, 8],
+];
+
 currentPlayer = "X"
-winner = None
 gameRunning = True
 
 # Printing the game board
@@ -27,40 +37,6 @@ def playerInput(board):
     else:
         print("Oops! Something went wrong.")
 
-# check for win or tie
-def checkHorizontal(board):
-    global winner
-    if board[0] == board[1] == board[2] and board[1]!= "-":
-        winner = board[1]
-        return True
-    elif board[3] == board[4] == board[5] and board[3]!= "-":
-        winner = board[3]
-        return True
-    elif board[6] == board[7] == board[8] and board[6]!= "-":
-        winner = board[3]
-        return True
-    
-def checkVertical(board):
-    global winner
-    if board[0] == board[3] == board[6] and board[0]!="-":
-        winner = board[0]
-        return True
-    elif board[1] == board[4] == board[7] and board[1]!="-":
-        winner = board[0]
-        return True
-    elif board[2] == board[5] == board[8] and board[2]!="-":
-        winner = board[0]
-        return True
-    
-def checkDiag(board):
-    global winner
-    if board[0] == board[4] == board[8] and board[0]!="-":
-        winner = board[0]
-        return True
-    
-    elif board[2] == board[4] == board[6] and board[0]!="-":
-        winner = board[0]
-        return True
    
 def checkTie(board):
     global gameRunning
@@ -85,17 +61,20 @@ def computer(board):
             board[position] = "O"
             switchPlayer()
 
-# check for win or tie again.
-def checkWin():
-    if checkDiag(board) or checkHorizontal(board) or checkVertical(board):
-        print(f"The winner is {winner}")
+def checkWin(board):
+    for pattern in winPatterns:
+        pos1 = board[pattern[0]]
+        pos2 = board[pattern[1]]
+        pos3 = board[pattern[2]]
+        if pos1 != "-" and pos2 != "-" and pos3 != "-":
+            if pos1 == pos2 == pos3:
+                print(f"The winner is {pos1}")
 
 while gameRunning:
     printBoard(board)
     playerInput(board)
-    checkWin()
     checkTie(board)
     switchPlayer()
     computer(board)
-    checkWin()
+    checkWin(board)
     checkTie(board)
